@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -37,10 +37,12 @@
             $("[custom=" + i + "]").trigger("click");
         });
         $(document).on("change", "#file2", function () {
-            VaildImage(this);
-            //预览效果实现
-            $("#addImg").append('<p><img src="' + URL.createObjectURL($(this)[0].files[0]) + '" class="img" style="width:50px;height:50px;"><input value="删除" onclick="javascript: del(this)"  type="button"/></p>');
-            LoadCount();
+            var res = VaildImage(this);
+            if (res) {
+                //预览效果实现
+                $("#addImg").append('<p><img src="' + URL.createObjectURL($(this)[0].files[0]) + '" class="img" style="width:50px;height:50px;"><input value="删除" onclick="javascript: del(this)"  type="button"/></p>');
+                LoadCount();
+            }
         });
     });
     //删除方法
@@ -58,5 +60,20 @@
     function VaildImage(obj) {
         console.log($(obj)[0].files[0].size / 1024 + "KB");//输出当前图片大小的,单位KB
         console.log($(obj)[0].files[0].type);//输出文件类型
+        var currSize = $(obj)[0].files[0].size / 1024;
+        var currType = $(obj)[0].files[0].type;
+        if (currSize > 1024)//就1兆吧
+        {
+            alert("文件大小不能超过1兆！");
+            $(obj).parent().remove();
+            return false;
+        }
+        //这里的判断可以改成数组形式或者多加几个判断也行
+        if (currType != "image/jpeg") {
+            alert("请上传JPG图片,其他格式暂不支持！");
+            $(obj).parent().remove();
+            return false;
+        }
+        return true;
     }
 </script>
