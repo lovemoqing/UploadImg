@@ -10,3 +10,4 @@
 
 2018-8-16 15:08:57
 JS写法改成面向对象写法， 同时DOM元素在页面上只留一个div，其余都用JS动态绑定，可以在Init的时候传参（html字符串），目前的自定义限制了DOM元素的ID，后续会开放多个参数，更大程度支持自定义html（如果有必要的话，目前推荐不传参）。
+//提供两种方式进行实例化  1.var uploadimg = UploadImg(); 2.var uploadimg = new UploadImg();
