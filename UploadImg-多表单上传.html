@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Test</title>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://malsup.github.io/jquery.form.js"></script>
+</head>
+<body>
+    <form id="tf1">
+        <input type="file" name="file" />
+        <input type="text" name="username" />
+    </form>
+    <form id="tf2">
+        <input type="file" name="file" />
+        <input type="text" name="username" />
+    </form>
+    <input type="button" value="提交" id="btn" />
+
+</body>
+</html>
+<script type="text/javascript">
+    (function ($) {
+        var UploadImg = function () {
+            var _this = this;
+            if (_this instanceof UploadImg) {
+                console.log("当前已实例化!");
+                _this.Init = function (str) {
+                    $(document).on("click", "#btn", function () {
+                        _this.Test();
+                    });
+                }
+                _this.Test = function () {
+                    var form1 = new FormData(document.getElementById("tf1"));
+                    var form2 = new FormData(document.getElementById("tf2"));
+                    _this.Ajax(form1);
+                    _this.Ajax(form2);
+                }
+                _this.Ajax = function (form) {
+                    $.ajax({
+                        url: "/test.html?type=1",
+                        type: "post",
+                        data: form,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            console.log(data);
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+                    });
+                }
+            } else {
+                console.log("当前未实例化，开始实例化!");
+                return new UploadImg();
+            }
+        }
+        var uploadImg = new UploadImg();
+        uploadImg.Init();
+    })(jQuery)
+</script>
