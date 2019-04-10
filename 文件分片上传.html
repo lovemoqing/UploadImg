@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f" crossorigin="anonymous"></script>
+</head>
+<body>
+    <input type="file" id="file6" multiple><button type="button" class="btnFile6">分片上传</button><div class="result"></div>
+</body>
+</html>
+<script>
+    var upload = function (file, skip, timeFlag) {
+        var formData = new FormData();//初始化一个FormData对象
+        var blockSize = 1000000;//每块的大小(1)
+        var nextSize = Math.min((skip + 1) * blockSize, file.size);//读取到结束位置
+        var fileData = file.slice(skip * blockSize, nextSize);//截取 部分文件 块
+        formData.append("file", fileData);//将 部分文件 塞入FormData
+        formData.append("fileName", file.name);//保存文件名字
+        formData.append("timeFlag", timeFlag);//文件唯一标识
+        $.ajax({
+            url: "Handler.ashx",
+            type: "POST",
+            data: formData,
+            processData: false,  // 告诉jQuery不要去处理发送的数据
+            contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
+            success: function (responseText) {
+                $(".result").html("已经上传了" + (skip + 1) + "块文件");
+                var bate = (skip + 1) / (file.size / blockSize) * 100;
+                bate = bate > 100 ? 100 : parseInt(bate);
+                console.log("[进度]=>" + bate + "%");
+                if (file.size <= nextSize) {//如果上传完成，则跳出继续上传
+                    alert("上传完成");
+                    return;
+                }
+                upload(file, ++skip, timeFlag);//递归调用
+            }
+        });
+    };
+    function GetCurrentTime() {
+        var d = new Date();
+        return d.getHours() + "" + d.getMinutes() + d.getSeconds() + d.getMilliseconds();
+    }
+    $(".btnFile6").click(function () {
+        var file = $("#file6")[0].files[0];
+        var timeFlag = GetCurrentTime();
+        upload(file, 0, timeFlag);
+    });
+</script>
