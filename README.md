@@ -18,4 +18,28 @@ JS写法改成面向对象写法， 同时DOM元素在页面上只留一个div�
 原理其实很简单，就是进行两次ajax。
 新建的文件是“UploadImg-多表单上传.html”，相关代码已经上传，由于图片上传的其他代码都一样，因此只写了核心的ajax部分。
 
-
+2019年4月10日16:04:20
+网上看到了一个前端分片后端合并的文件上传操作，能用，加上自己的修改之后更完善了。
+html已经上传GitHub了，后端代码如下：
+`
+        public void SaveFile(HttpContext context)
+        {
+            var timeFlag = context.Request.Form["timeFlag"];
+            var fileName = context.Request.Form["fileName"];
+            //保存文件到指定目录
+            var filePath = @"D:\penglong\study\WebApplication1\WebApplication1\uploads\" + timeFlag + fileName;
+            //创建一个追加（FileMode.Append）方式的文件流
+            using (FileStream fs = new FileStream(filePath, FileMode.Append, FileAccess.Write))
+            {
+                using (BinaryWriter bw = new BinaryWriter(fs))
+                {
+                    //读取文件流
+                    BinaryReader br = new BinaryReader(context.Request.Files[0].InputStream);
+                    //将文件留转成字节数组
+                    byte[] bytes = br.ReadBytes((int)context.Request.Files[0].InputStream.Length);
+                    //将字节数组追加到文件
+                    bw.Write(bytes);
+                }
+            }
+        }
+`
