@@ -43,3 +43,4 @@ html已经上传GitHub了，后端代码如下：
             }
         }
 `
+详细描述可以见我的博客：[asp.net 文件分片上传](https://www.cnblogs.com/sunshine-wy/p/10681765.html)
