@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>demo</title>
@@ -8,16 +9,18 @@
         #addImg {
             border: 1px solid red;
             height: 300px;
-            width: 100px;
+            width: 400px;
         }
     </style>
 </head>
+
 <body>
     <input type="button" id="btn" value="点我点我" />
     <form action="" method="post" enctype="multipart/form-data">
         <div id="container_uploadImg"></div>
     </form>
 </body>
+
 </html>
 <script>
     (function ($) {
@@ -32,26 +35,39 @@
                         $("#container_uploadImg").append("<h3>共<span id='currImgCount'>0</span>张,还能上传<span id='remainingImgCount'>4</span>张</h3><div id='addImg'></div><div id='Addfj'></div>");
                     }
                     var i = 0;//用于计数,只是一个索引,方便根据索引执行click事件
+                    var tempThis;//用于重新上传时记录临时的重新上传对象
                     $(document).on("click", "#btn", function () {
                         if ($("#addImg").children().length >= 4) {
                             alert("最多上传4张!");
                             return;
                         }
                         i++;
-                        $("#Addfj").append('<div id="fileDiv2"><input type="file" name="file" id="file2" custom="' + i + '" style="display:none;" /></div>');
+                        $("#Addfj").append('<div class="fileDiv"><input type="file" name="file" class="file_input" custom="' + i + '" style="display:none;" /></div>');
                         $("[custom=" + i + "]").trigger("click");
                     });
-                    $(document).on("change", "#file2", function () {
+                    $(document).on("change", ".file_input", function () {
                         var res = _this.VaildImage(this);
                         if (res) {
                             //预览效果实现
-                            $("#addImg").append('<p><img src="' + URL.createObjectURL($(this)[0].files[0]) + '" class="img" style="width:50px;height:50px;"><input class="del" value="删除"  type="button"/></p>');
+                            if (tempThis) {
+                                var _currIndex = $(tempThis).parent().index();
+                                $("#addImg").children().eq(_currIndex).html('<img src="' + URL.createObjectURL($(this)[0].files[0]) + '" class="img" style="width:50px;height:50px;"><input class="del" value="删除"  type="button"/></<img><input id="reload" type="button" value="重新上传"/>');
+                                tempThis = undefined;
+                            } else {
+                                $("#addImg").append('<img src="' + URL.createObjectURL($(this)[0].files[0]) + '" class="img" style="width:50px;height:50px;"><input class="del" value="删除"  type="button"/></<img><input id="reload" type="button" value="重新上传"/>');
+                            }
                             _this.LoadCount();
                         }
                     });
+                    $(document).on("click", "#reload", function () {
+                        tempThis = $(this).parent().find("input");
+                        var _currIndex = $(tempThis).parent().index();
+                        console.log(_currIndex);
+                        $(".fileDiv").eq(_currIndex).find("input").trigger("click");
+                    });
                     $(document).on("click", ".del", function () {
                         _this.Del(this);
-                    })
+                    });
                 }
                 _this.Del = function (obj) {
                     var _currIndex = $(obj).parent().index();
@@ -75,7 +91,7 @@
                         return false;
                     }
                     //这里的判断可以改成数组形式或者多加几个判断也行
-                    if (currType != "image/jpeg") {
+                    if (!(currType == "image/jpeg" || currType == "image/png")) {
                         alert("请上传JPG图片,其他格式暂不支持！");
                         $(obj).parent().remove();
                         return false;
