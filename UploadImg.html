@@ -9,7 +9,7 @@
         #addImg {
             border: 1px solid red;
             height: 300px;
-            width: 400px;
+            width: 200px;
         }
     </style>
 </head>
@@ -54,7 +54,7 @@
                                 $("#addImg").children().eq(_currIndex).html('<img src="' + URL.createObjectURL($(this)[0].files[0]) + '" class="img" style="width:50px;height:50px;"><input class="del" value="删除"  type="button"/></<img><input id="reload" type="button" value="重新上传"/>');
                                 tempThis = undefined;
                             } else {
-                                $("#addImg").append('<img src="' + URL.createObjectURL($(this)[0].files[0]) + '" class="img" style="width:50px;height:50px;"><input class="del" value="删除"  type="button"/></<img><input id="reload" type="button" value="重新上传"/>');
+                                $("#addImg").append('<p><img src="' + URL.createObjectURL($(this)[0].files[0]) + '" class="img" style="width:50px;height:50px;"><input class="del" value="删除"  type="button"/></<img><input id="reload" type="button" value="重新上传"/></p>');
                             }
                             _this.LoadCount();
                         }
@@ -71,6 +71,7 @@
                 }
                 _this.Del = function (obj) {
                     var _currIndex = $(obj).parent().index();
+                    console.log( $(obj).parent());
                     $("#Addfj").children().eq(_currIndex).remove();
                     $(obj).parent().remove();
                     _this.LoadCount();
