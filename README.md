@@ -47,3 +47,19 @@ html已经上传GitHub了，后端代码如下：
 
 2019年7月16日09:36:51
 给文件上传加了一个重新上传的逻辑，在删除按钮的旁边，上传完图片以后如果觉得某个图传错了，点击重新上传即可实现替换操作。
+
+
+2020年10月15日14:32:39
+多表单上传的demo，用到的是异步操作，不刷新当前页面，对应的后端代码如下：
+`
+public JsonResult Test()
+        {
+            var res = string.Empty;
+            if (Request.Files["file"].ContentLength > 0)
+            {
+                res = DateTime.Now.ToString("yyyyMMddHHmmsssss")+ Request.Files["file"].FileName;
+                Request.Files["file"].SaveAs(Server.MapPath("~/Template/" + res));
+            }
+            return Json("/Template/" + res);
+        }
+`
